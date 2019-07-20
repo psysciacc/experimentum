@@ -43,14 +43,13 @@ if (array_key_exists('register', $_GET)) {
     $return['user_id'] = $user->register($clean['password']);
     
     if ($return['user_id'] && !empty($clean['firstname']) && !empty($clean['lastname']) && !empty($clean['email']) ) {
-        $query = 'REPLACE INTO res (user_id, firstname, lastname, email, supervisor_id) VALUES (?, ?, ?, ?, ?)';
+        $query = 'REPLACE INTO res (user_id, firstname, lastname, email) VALUES (?, ?, ?, ?)';
         $vals = array(
-            'isssi',
+            'isss',
             $return['user_id'],
             $clean['firstname'],
             $clean['lastname'],
-            $clean['email'],
-            $clean['supervisor']
+            $clean['email']
         );
         
         $q = new myQuery();
@@ -61,11 +60,9 @@ if (array_key_exists('register', $_GET)) {
         } else {
             $return['msg'] = 'Your researcher status request has been sent.';
             
-            /*
             $q->prepare("REPLACE INTO supervise (supervisor_id, supervisee_id) VALUES (?, ?)",
                         array("ii", $clean['supervisor'], $return['user_id'])
             );
-            */
             
             $q->prepare('SELECT user_id, firstname, lastname, email, 
                                 LEFT(MD5(regdate),10) as p
@@ -85,29 +82,29 @@ if (array_key_exists('register', $_GET)) {
                 $message =  "<html><body style='color: rgb(50,50,50); font-family:\"Lucida Grande\"';>" .
                             "<p>Dear {$super['firstname']} {$super['lastname']},</p>" .
                             "<p>{$clean['firstname']} {$clean['lastname']} ({$clean['email']}) " .
-                            "just requested a researcher account at Experimentum " .
+                            "just requested a researcher account at the PSA Experiment interface" .
                             "and listed you as the supervisor.</p>\n".
                             "<p>You can authorise their account at the " .
-                            "<a href='https://exp.psy.gla.ac.uk/include/scripts/login?u={$super['user_id']}&p={$super['p']}&url=/res/admin/supervise'>Supervision page</a>. " .
+                            "<a href='https://psa.psy.gla.ac.uk/include/scripts/login?u={$super['user_id']}&p={$super['p']}&url=/res/admin/supervise'>Supervision page</a>. " .
                             "(<b>Do not share this email, as it contains an auto-login link for your account.</b>)</p>\n" .
-                            "<p>Kind regards,<br>Experimentum Admin</p>\n" .
+                            "<p>Kind regards,<br>Lisa DeBruine</p>\n" .
                             "</body></html>\n.";
             
                 $text_message = "Dear {$super['firstname']} {$super['lastname']},\n" .
                             "{$clean['firstname']} {$clean['lastname']} ({$clean['email']}) " .
-                            "just requested a researcher account at Experimentum and listed you as the supervisor.\n\n".
+                            "just requested a researcher account at the PSA Experiment interface and listed you as the supervisor.\n\n".
                             "You can authorise their account at:  " .
-                            "https://exp.psy.gla.ac.uk/include/scripts/login?u={$super['user_id']}&p={$super['p']}&url=/res/admin/supervise\n\n" .
+                            "https://psa.psy.gla.ac.uk/include/scripts/login?u={$super['user_id']}&p={$super['p']}&url=/res/admin/supervise\n\n" .
                             "(Do not share this email, as it contains an auto-login link for your account.)\n\n".
                             "Kind regards,\n" .
-                            "Experimentum Admin";
+                            "Lisa DeBruine";
             
                 $mail = new PHPMailer();    //Create a new PHPMailer instance
     
-                $mail->setFrom(ADMIN_EMAIL, ADMIN_NAME);
+                $mail->setFrom($clean['email'], "{$clean['firstname']} {$clean['lastname']}");
                 $mail->addAddress($email, $email);
-                $mail->addBCC(ADMIN_EMAIL, ADMIN_NAME);
-                $mail->Subject = 'Experimentum Researcher Status Request: ' . $clean['firstname'] . " " . $clean['lastname'];
+                $mail->addBCC('lisa.debruine@glasgow.ac.uk', 'Lisa DeBruine');
+                $mail->Subject = 'PSA Researcher Status Request: ' . $clean['firstname'] . " " . $clean['lastname'];
                 $mail->msgHTML($message);
                 $mail->AltBody = $text_message;
                 

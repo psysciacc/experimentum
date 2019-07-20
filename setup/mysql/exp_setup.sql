@@ -34,9 +34,6 @@ CREATE TABLE `exp` (
   `feedback_specific` text DEFAULT NULL,
   `feedback_general` text DEFAULT NULL,
   `labnotes` text DEFAULT NULL,
-  `slider_min` int(4) DEFAULT 0,
-  `slider_max` int(4) DEFAULT 100,
-  `slider_step` int(4) DEFAULT 1,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
@@ -299,7 +296,6 @@ CREATE TABLE `res` (
   `lastname` varchar(100) DEFAULT NULL,
   `institution` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  `supervisor_id` int(11),
   PRIMARY KEY (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -352,21 +348,6 @@ CREATE TABLE `downloads` (
   `id` int(11) DEFAULT NULL,
   `dt` datetime DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `lab`;
-CREATE TABLE `lab` (
-  `lab_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `code` varchar(20) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `language` varchar(255) DEFAULT NULL,
-  `city` varchar(255) DEFAULT NULL,
-  `country` varchar(2) DEFAULT NULL,
-  `create_date` date DEFAULT NULL,
-  `labnotes` text DEFAULT NULL,
-  PRIMARY KEY (`lab_id`),
-  UNIQUE KEY `code` (`code`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS `countries`;
@@ -630,3 +611,17 @@ INSERT INTO `countries` VALUES
 UNLOCK TABLES;
 
 
+DROP TABLE IF EXISTS `lab`;
+CREATE TABLE `lab` (
+  `lab_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `code` varchar(20) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `language` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `country` varchar(2) DEFAULT NULL,
+  `create_date` date DEFAULT NULL,
+  `labnotes` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

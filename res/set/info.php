@@ -18,7 +18,7 @@ $styles = array(
     "#setitems td+td+td+td+td" => "text-align: right;",
     "#setitems td" => "border-left: 1px dotted grey;",
     "#setitems tr" => "border-right: 1px dotted grey;",
-    "span.set_nest" => "display: inline-block; width: 20px; height: 20px; background: transparent no-repeat center center url(/images/linearicons/arrow-down?c=F00);",
+    "span.set_nest" => "display: inline-block; width: 20px; height: 20px; background: transparent no-repeat center center url(/images/linearicons/arrow-down?c=1f9c03);",
     "span.set_nest.hide_set"    => "background-image: url(/images/linearicons/arrow-right?c=000);",
     ".potential-error" => "color: hsl(0, 100%, 40%);"
 );
@@ -182,7 +182,7 @@ $page->displayBody();
     <tr><td>Status:</td> <td><?= $status ?></td></tr>
     <tr><td>Created on:</td><td><?= $itemdata['create_date'] ?></td></tr>
     <tr><td>Type:</td><td id='itemtype'><?= $types[$itemdata['type']] ?></td></tr>
-    <tr><td>Owners:</td> 
+    <tr><td>Owners:<br><?php if ($_SESSION['status'] != 'student') { echo '<button class="tinybutton"  id="owner-change">Change</button>'; } ?></td> 
         <td>
             <ul id='owner-edit'>
                 <?= $owner_edit ?>

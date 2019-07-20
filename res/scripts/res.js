@@ -210,6 +210,44 @@ $('html').on("click", ".owner-delete, .owner-delete-items", function() {
 
 $('button.tinybutton').button();
 
+$('html').on("click", "#owner-change", function() {
+    var to_add = [];
+    var to_delete = [];
+    $('#owner-edit .owner-delete').each( function() {
+        var $this = $(this);
+        
+        if ($this.text() == "delete") {
+            to_add.push($this.attr('owner-id'));
+        } else {
+            to_delete.push($this.attr('owner-id'));
+        }
+    });
+    
+    if (to_add.length == 0) {
+        growl("You have to keep at least one owner.");
+        return false;
+    }
+    
+    $.ajax({
+        url: '/res/scripts/owners',
+        type: 'POST',
+        data: {
+            type: $('#item_type').val(),
+            id: $('#item_id').val(),
+            add: to_add,
+            delete: to_delete
+        },
+        success: function(data) {
+            if (data) {
+                growl(data);
+            } else {
+                $('#owner-edit .delete-owner').closest('li').remove();
+                $('#owner-edit span').removeClass('new-owner');
+            }
+        }
+    });
+});
+
 function item_stats(items, proj_id) {
     console.log('item_stats', items);
     

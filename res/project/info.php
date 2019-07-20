@@ -21,8 +21,7 @@ $styles = array(
     "#setitems tr" => "border-right: 1px dotted grey;",
     "span.set_nest" => "display: inline-block; width: 20px; height: 20px; background: transparent no-repeat center center url(/images/linearicons/arrow-down?c=F00);",
     "span.set_nest.hide_set"    => "background-image: url(/images/linearicons/arrow-right?c=000);",
-    ".potential-error" => "color: hsl(0, 100%, 40%);",
-    "#owner-edit" => "margin: 0;"
+    ".potential-error" => "color: hsl(0, 100%, 40%);"
 );
     
 /****************************************************/
@@ -60,7 +59,7 @@ $page->displayBody();
     <tr><td>Created on:</td><td id='create_date'>...</td></tr>
     <tr><td>Owners:</td> 
         <td id='owners'>
-            <table id='owner-edit'></table>
+            <ul id='owner-edit'></ul>
             <?php if ($_SESSION['status'] != 'student') { ?>
             <input id='owner-add-input' type='text' > 
             <button class='tinybutton' id='owner-add'>add</button>
@@ -171,8 +170,8 @@ $page->displayBody();
                     $('#status-select').html(data.status);
                     
                     $('#owner-edit').html(data.owners.owner_edit);
-                    $('.tinybutton').button();
                     $('#owner-add-input').autocomplete('option', 'source', data.owners.source);
+                    $('.tinybutton').button();
                     
                     $('#project_items').html(data.project_items);
                     item_stats(data.items_for_data, $('#item_id').val());
@@ -193,26 +192,6 @@ $page->displayBody();
     
     getProjectInfo();
 
-    
-    $('table.info').on('click', '#request-status-change', function() {
-        console.log("yes");
-        $.ajax({
-            url: '/res/scripts/request_status_change',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                type: 'project',
-                id: $('#item_id').val()
-            },
-            success: function(data) {
-                if (data.error) {
-                    $('<div title="Problem with Status Change Request" />').html(data.error).dialog();
-                } else {
-                    growl("Email sent to " + data.sor);
-                }
-            }
-        });
-    });
     
     $('#status-select').on('click', '#all-status-change', function() {
         var projstatus = $('#status').val();

@@ -55,17 +55,15 @@ if (array_key_exists('save', $_GET)) {
     // update exp table
     $exp_query = sprintf('REPLACE INTO exp 
         (id, name, res_name, exptype, subtype, design, trial_order, side,
-        instructions, question, label1, label2, label3, label4, 
-        rating_range, low_anchor, high_anchor,
+        instructions, question, label1, label2, label3, label4, rating_range, low_anchor, high_anchor,
         feedback_query, feedback_specific, feedback_general, labnotes, 
         sex, lower_age, upper_age, 
-        total_stim, random_stim, default_time, increment_time, 
-        slider_min, slider_max, slider_step, create_date)  
+        total_stim, random_stim, default_time, increment_time, create_date)  
         VALUES (%s, "%s", "%s", "%s", "%s", "%s", "%s", "%s", 
         "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", 
         "%s", "%s", "%s","%s", 
         "%s", "%s", "%s", 
-        "%s", "%s", "%s", "%s", "%s", "%s", "%s", NOW())',
+        "%s", "%s", "%s", "%s", NOW())',
         (validID($clean['id'])) ? $clean['id'] : 'NULL',
         $clean['name'], 
         $clean['res_name'], 
@@ -93,10 +91,7 @@ if (array_key_exists('save', $_GET)) {
         $clean['total_stim'], 
         $clean['random_stim'], 
         $clean['default_time'],
-        $clean['increment_time'],
-        $clean['slider_min'],
-        $clean['slider_max'],
-        $clean['slider_step']
+        $clean['increment_time']
     );
     $exp_query = str_replace('""', 'NULL', $exp_query);
     $exp_query = str_replace('"NULL"', 'NULL', $exp_query);

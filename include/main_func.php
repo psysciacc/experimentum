@@ -84,7 +84,7 @@
         $l = "<$list_type class='$class'>" . ENDLINE;
         $c = 0;
         foreach ($links as $href => $link) {
-            if (strpos($class, 'bigbuttons') !== false) {
+            if ('bigbuttons' == $class) {
                 $number_of_colors = 2;  // number of cycling colors from stylesheet
                 $c = ($c % ($number_of_colors-1)) + 1;
                 if (is_array($bigbutton_classes) && isset($bigbutton_classes[$href])) {
@@ -128,6 +128,45 @@
             echo $array;
         }
         echo '</dl>' . ENDLINE;
+    }
+    
+    function array_to_table($array, $header = true, $sortable=false, $rotate=false) {
+        if (empty($array)) return false;
+        
+        if ($rotate) {
+            $array = rotate_array($array);
+        }
+        
+        $sort = ($sortable) ? ' sortable' : '';
+        $return = '<table class="query' . $sort . '">' . PHP_EOL;
+        
+        // table header
+        if ($header) {
+        $return .= '<thead><tr>';
+            $keys = array_keys($array);
+            foreach ($array[$keys[0]] as $h => $v) {
+                $return .= "    <th>$h</th>" . PHP_EOL;
+            }
+            $return .= '</tr></thead>';
+        }
+        
+        // table data
+        $return .= "<tbody>";
+        foreach($array as $a) {
+            $return .= "<tr>";
+            foreach ($a as $v) {
+                $return .= "    <td>$v</td>" . PHP_EOL;
+            }
+            $return .= '</tr>' . PHP_EOL;
+        }
+        $return .= "</tbody>";
+        
+        $return .= '</table>' . PHP_EOL . PHP_EOL;
+        
+        // add sorting script
+        if ($sortable) $return .= '<script src="/include/js/sorttable.js"></script>' . PHP_EOL;
+        
+        return $return;
     }
     
     function multiFaces() {
@@ -296,7 +335,7 @@
                WHERE type='$type' 
                  AND id=$id 
                  AND (user_id=$user_id OR
-                   user_id IN (SELECT user_id FROM res WHERE supervisor_id=$user_id)
+                   user_id IN (SELECT supervisee_id FROM supervise WHERE supervisor_id=$user_id)
                  )"
         );
         return $query->get_num_rows();

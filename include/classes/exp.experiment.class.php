@@ -61,10 +61,7 @@ class experiment {
             $this->orient = $info['orient'];
             $this->random_stim = $info['random_stim'];
             $this->default_time = $info['default_time'];
-            $this->increment_time = $info['increment_time'];
-            $this->slider_min = $info['slider_min'];
-            $this->slider_max = $info['slider_max'];
-            $this->slider_step = $info['slider_step'];
+            $this->increment_time = $info['increment_time'];                
             
             // get trial info
             $trials_query = new myQuery('SELECT trial_n, t.name, 
@@ -168,7 +165,7 @@ class experiment {
         $text .= "<div id='continue_button' class='buttons' style='display:none;'>" . ENDLINE;
         if ($_SESSION['set_item_number'] > 0 || array_key_exists('project', $_SESSION)) {
             // remove option to escape during sets or projects
-            $text .= "    <input type='button' id='beginExp' onclick='beginExp();' value='" . loc('Begin the Experiment') . "' />" . ENDLINE;
+            $text .= "    <input type='button' id='beginExp' onclick='beginExp();' value='" . loc('Start') . "' />" . ENDLINE;
         } else if ($this->subtype == 'speeded') {
             $text .= "    <div>" . loc('Place your fingers on the keys<br>and press the space bar<br>to consent &amp; begin the experiment') . "</div>" . ENDLINE;
             $text .= "    <input type='button' onclick='noConsent();' value='" . loc('I Do Not Consent, Return to the Home Page') . "' />" . ENDLINE;
@@ -221,6 +218,8 @@ class experiment {
         if (array_key_exists('go', $_GET)) { 
             $text .=     '    $(function() { beginExp(); });' . ENDTAG; 
         }
+        
+        $text .=        '   $("#beginExp").button({ showLabel: false, icon: "ui-icon-play"});' . ENDTAG;
 
         // get image loader
         if ($this->stimuli_type == 'image' && !array_key_exists('go', $_GET) && count($this->trials) > 0) {
@@ -364,9 +363,7 @@ class experiment {
         // next trial function
         $text .=           '    function nextTrial(r) {' . ENDLINE .
                            '        console.log("nextTrial(" + r + ")");'. ENDLINE .
-                           '        $(".input_interface input").removeClass("ui-state-active")' . ENDLINE .
-                           '                                   .removeClass("ui-state-hover")' . ENDLINE .
-                           '                                   .removeClass("ui-state-focus").blur();' . ENDLINE;
+                           '        $(".input_interface input").removeClass("ui-state-active").removeClass("ui-state-hover");' . ENDLINE;
         
         if ($this->stimuli_type == 'audio') {
             $text .=       '        if ($("#experiment .audio.unplayed").length > 0) {' . ENDLINE .
@@ -553,7 +550,7 @@ class experiment {
         $text .= '
             if ($("#question").length > 0 && typeof(question) !== "undefined") $("#question").html(question[trialOrder[trial]]);
             $("#trial_n").html(trial);
-            $("#footer").text("Trial "+ trial +" of " + trialOrder.length-1);
+            $("#footer").text("Trial "+ trial +" of " + (trialOrder.length-1));
             
             var currentTime = new Date();
             beginTrial = currentTime.getTime();

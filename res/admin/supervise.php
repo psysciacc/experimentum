@@ -13,7 +13,8 @@ $title = array(
     '' => loc('Supervision')
 );
 
-$styles = array();
+$styles = array(
+);
 
 // change status
 if (array_key_exists("change", $_GET)) {
@@ -44,11 +45,12 @@ if ($_SESSION['status'] == 'admin') {
                 r.email as Email,
                 s.user_id as Supervisor,
                 status as Status,
-                r.supervisor_id as `Send Email`
+                supervisor_id as `Send Email`
            FROM res AS r 
-      LEFT JOIN user AS u   ON u.user_id = r.user_id
-      LEFT JOIN res AS s    ON s.user_id = r.supervisor_id
-       ORDER BY u.status+0, r.lastname');
+      LEFT JOIN supervise   ON supervisee_id = r.user_id
+      LEFT JOIN user        ON user.user_id = r.user_id
+      LEFT JOIN res AS s    ON s.user_id = supervisor_id
+       ORDER BY status+0, r.lastname');
 } else {
     $query->prepare(
         'SELECT r.user_id AS ID, 
@@ -56,12 +58,13 @@ if ($_SESSION['status'] == 'admin') {
                 r.email as Email,
                 CONCAT(s.lastname, ", ", s.firstname) as Supervisor,
                 status as Status,
-                r.supervisor_id as `Send Email`
-           FROM res AS r
-      LEFT JOIN user AS u   ON u.user_id = r.user_id
-      LEFT JOIN res AS s    ON s.user_id = r.supervisor_id
-          WHERE r.supervisor_id = ?
-       ORDER BY u.status+0, r.lastname',
+                supervisor_id as `Send Email`
+           FROM supervise 
+      LEFT JOIN res AS r    ON supervisee_id = r.user_id
+      LEFT JOIN user        ON user.user_id = r.user_id
+      LEFT JOIN res AS s    ON s.user_id = supervisor_id
+          WHERE supervisor_id = ?
+       ORDER BY status+0, r.lastname',
        array('i', $_SESSION['user_id'])
     );
 }
@@ -86,7 +89,7 @@ $supermenu .= "'</select>';" . ENDLINE;
 /***************************************************/
 
 $page = new page($title);
-$page->set_menu(false);
+$page->set_menu(true);
 
 $page->displayHead($styles);
 
@@ -199,11 +202,6 @@ function changeResStatus(sel, the_id) {
     });
 }
 
-$('table.query tbody tr td:nth-child(2)').wrapInner("<a></a>").find('a').click(function() {
-    var user_id = $(this).closest('tr').find('td:nth-child(1)').html();
-    document.location = '/res/admin/participant?id=' + user_id;
-});
-
 $('table.query tbody tr').each( function(i) {
     var the_id = $(this).find('td:nth-child(1)').html();
     
@@ -255,6 +253,10 @@ $('table.query tbody tr').each( function(i) {
     }
 <?php } ?>
 });
+
+
+
+
 
 </script>
 

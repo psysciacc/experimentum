@@ -155,7 +155,7 @@ $page->displayBody();
             <input type='checkbox' id='findcontaining' name='findcontaining' value='true' /> <label for='findcontaining'>containing</label>
         </dd>
     <dt><label for='id'>id</label>:</dt>                
-        <dd><input type='text' id='id' name='id' value='<?= $_GET['id'] ?>' maxlength='8' size='8' /></dd>
+        <dd><input type='text' id='id' name='id' value='' maxlength='8' size='8' /></dd>
 </dl>
 <div class="buttonset">
     <button id='finduser'>find user</button>
@@ -183,127 +183,125 @@ $page->displayBody();
 
 <script>
 
-$('#userinfo').hide();
-$('.buttonset').buttonset();
-$('#id, #username').keydown(function(e){
-    if (e.which == KEYCODE.enter || e.which == KEYCODE.tab) $('#finduser').click();
-    if ($('#finduser span').html() == 'reset search') { return false; }
-});
-$('#finduser').click( function() {
-    if ($('#finduser span').html() == 'reset search') {
-        $('#msgtext').html("");
-        $('#id,#username').val('');
-        $('#userinfo,#show_comp_tables').hide();
-        $('#finduser span').html('find user');
-        $('#resetpswd').button({disabled: true});
-        $('#completed_tables').html('');
-        $('#findcontaining').attr('checked', false);
-        $('#username, #findcontaining, label[for="findcontaining"]').show();
-        $('#userlist').remove();
-    } else {
+$(function() {
+    $('#userinfo').hide();
+    $('.buttonset').buttonset();
+    $('#id, #username').keydown(function(e){
+        if (e.which == KEYCODE.enter || e.which == KEYCODE.tab) $('#finduser').click();
+        if ($('#finduser span').html() == 'reset search') { return false; }
+    });
+    $('#finduser').click( function() {
+        if ($('#finduser span').html() == 'reset search') {
+            $('#msgtext').html("");
+            $('#id,#username').val('');
+            $('#userinfo,#show_comp_tables').hide();
+            $('#finduser span').html('find user');
+            $('#resetpswd').button({disabled: true});
+            $('#completed_tables').html('');
+            $('#findcontaining').attr('checked', false);
+            $('#username, #findcontaining, label[for="findcontaining"]').show();
+            $('#userlist').remove();
+        } else {
+            $.ajax({
+                url: 'participant?find',
+                data: $('.usersearch input').serialize(),
+                type: 'POST',
+                dataType: 'json',
+                success: function(data) {
+                    $('#msgtext').html("");
+                    if (data.userlist) {
+                        var userlist = $('<select id="userlist" />');
+                        
+                        var n = 0;
+                        $.each(data, function(user) {
+                            if (user != 'userlist') {
+                                userlist.append('<option value="' + data[user].username + '">'+ data[user].username + '</option>');
+                                n++;
+                            }
+                        });
+                        userlist.prepend('<option value="" selected="selected">' + n + ' matching usernames found</option>');
+                        $('#username').after(userlist);
+                        $('#userlist').change( function() {
+                            $('#username').val($('#userlist').val());
+                            $('#username, #findcontaining, label[for="findcontaining"]').show();
+                            $('#finduser span').html('find user');
+                            $('#finduser').click();
+                            $('#userlist').remove();
+                        });
+                        $('#findcontaining').attr('checked', false);
+                        $('#finduser span').html('reset search');
+                        $('#username, #findcontaining, label[for="findcontaining"]').hide();
+                    } else {
+                        $('#id').val(data.user_id);
+                        $('#username').val(data.username);
+                        $('#sex').html(data.sex);
+                        $('#birthdate').html(data.birthday);
+                        if (data.p == '' || data.user_id == <?= $_SESSION['user_id'] ?>) {
+                            $('#status').html(data.status);
+                        } else {
+                            var $status = $('<select/>');
+                            $status.append('<option value="test">test</option>');
+                            $status.append('<option value="guest">guest</option>');
+                            $status.append('<option value="registered">registered</option>');
+                            <?php if ($_SESSION['status'] == 'admin' || $_SESSION['status'] == 'res') { ?> $status.append('<option value="student">student</option>'); <?php } ?>
+                            <?php if ($_SESSION['status'] == 'admin') { ?> $status.append('<option value="res">researcher</option>'); <?php } ?>
+                            <?php if ($_SESSION['status'] == 'admin') { ?> $status.append('<option value="admin">admin</option>'); <?php } ?>
+                            $status.val(data.status);
+                            $('#status').html("").append($status);
+                        }
+                        if (data.p == '') {
+                            $('#autologin').html('You do not have authorisation to get the autologin for ' + data.status + 's');
+                        } else {
+                            $('#autologin').html('<a href="/include/scripts/login?u=' + data.user_id + '&p=' + data.p + '&url=/">http://<?= $_SERVER['HTTP_HOST'] ?>/include/scripts/login?u=' + data.user_id + '&p=' + data.p + '&url=/</a>');
+                        }
+                        $('#userinfo').show();
+                        $('#resetpswd').button({disabled: false});
+                        $('#show_comp_tables').show();
+                        $('#finduser span').html('reset search');
+                    }
+                }
+            });
+        }
+    });
+    
+    $('#status').on('change', 'select', function() {
         $.ajax({
-            url: 'participant?find',
-            data: $('.usersearch input').serialize(),
+            url: '/res/scripts/resstatus',
+            data: {
+                id: $('#id').val(),
+                status: $('#status select').val()
+            },
             type: 'POST',
             dataType: 'json',
             success: function(data) {
-                $('#msgtext').html("");
-                if (data.userlist) {
-                    var userlist = $('<select id="userlist" />');
-                    
-                    var n = 0;
-                    $.each(data, function(user) {
-                        if (user != 'userlist') {
-                            userlist.append('<option value="' + data[user].username + '">'+ data[user].username + '</option>');
-                            n++;
-                        }
-                    });
-                    userlist.prepend('<option value="" selected="selected">' + n + ' matching usernames found</option>');
-                    $('#username').after(userlist);
-                    $('#userlist').change( function() {
-                        $('#username').val($('#userlist').val());
-                        $('#username, #findcontaining, label[for="findcontaining"]').show();
-                        $('#finduser span').html('find user');
-                        $('#finduser').click();
-                        $('#userlist').remove();
-                    });
-                    $('#findcontaining').attr('checked', false);
-                    $('#finduser span').html('reset search');
-                    $('#username, #findcontaining, label[for="findcontaining"]').hide();
-                } else {
-                    $('#id').val(data.user_id);
-                    $('#username').val(data.username);
-                    $('#sex').html(data.sex);
-                    $('#birthdate').html(data.birthday);
-                    if (data.p == '' || data.user_id == <?= $_SESSION['user_id'] ?>) {
-                        $('#status').html(data.status);
-                    } else {
-                        var $status = $('<select/>');
-                        $status.append('<option value="test">test</option>');
-                        $status.append('<option value="guest">guest</option>');
-                        $status.append('<option value="registered">registered</option>');
-                        <?php if ($_SESSION['status'] == 'admin' || $_SESSION['status'] == 'res') { ?> $status.append('<option value="student">student</option>'); <?php } ?>
-                        <?php if ($_SESSION['status'] == 'admin') { ?> $status.append('<option value="res">researcher</option>'); <?php } ?>
-                        <?php if ($_SESSION['status'] == 'admin') { ?> $status.append('<option value="admin">admin</option>'); <?php } ?>
-                        $status.val(data.status);
-                        $('#status').html("").append($status);
-                    }
-                    if (data.p == '') {
-                        $('#autologin').html('You do not have authorisation to get the autologin for ' + data.status + 's');
-                    } else {
-                        $('#autologin').html('<a href="/include/scripts/login?u=' + data.user_id + '&p=' + data.p + '&url=/">http://<?= $_SERVER['HTTP_HOST'] ?>/include/scripts/login?u=' + data.user_id + '&p=' + data.p + '&url=/</a>');
-                    }
-                    $('#userinfo').show();
-                    $('#resetpswd').button({disabled: false});
-                    $('#show_comp_tables').show();
-                    $('#finduser span').html('reset search');
-                }
+                growl(data, 3000);
             }
         });
-    }
-});
-
-if ($('#id').val()) {
-    $('#finduser').click();
-}
-
-$('#status').on('change', 'select', function() {
-    $.ajax({
-        url: '/res/scripts/resstatus',
-        data: {
-            id: $('#id').val(),
-            status: $('#status select').val()
-        },
-        type: 'POST',
-        dataType: 'json',
-        success: function(data) {
-            growl(data, 3000);
-        }
     });
-});
-
-$('#resetpswd').click( function() {
-    $.ajax({
-        url: 'participant?resetpswd',
-        data: $('#id').serialize(),
-        type: 'POST',
-        success: function(data) {
-            $('#msgtext').html(data);
-        }
-    });
-}).button({disabled: true});
-
-$('#show_comp_tables').button().click(function() {
-    $('#completed_tables').html("<img src='/images/loaders/loading.gif' />").load('participant?tables&user_id=' + $('#id').val(), function() {
-        stripe('#completed_tables tbody');
-        
-        $('#completed_tables table.sortable').each(function() {
-            var t = $(this).get(0);
-            sorttable.makeSortable(t);
+    
+    $('#resetpswd').click( function() {
+        $.ajax({
+            url: 'participant?resetpswd',
+            data: $('#id').serialize(),
+            type: 'POST',
+            success: function(data) {
+                $('#msgtext').html(data);
+            }
         });
-        $('#show_comp_tables').hide();
-    });
-}).hide();
+    }).button({disabled: true});
+
+    $('#show_comp_tables').button().click(function() {
+        $('#completed_tables').html("<img src='/images/loaders/loading.gif' />").load('participant?tables&user_id=' + $('#id').val(), function() {
+            stripe('#completed_tables tbody');
+            
+            $('#completed_tables table.sortable').each(function() {
+                var t = $(this).get(0);
+                sorttable.makeSortable(t);
+            });
+            $('#show_comp_tables').hide();
+        });
+    }).hide();
+});
 
 </script>
 

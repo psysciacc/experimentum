@@ -153,10 +153,8 @@ class questionnaire extends formTable {
                     case 'ranking':
                     case 'input':
                     case 'text':
-                    case 'msgRow':
-                        break;
                     case 'textarea':
-                        //$questions[$qd['id']]->set_dimensions($qd['startnum'], $qd['endnum'], true);
+                    case 'msgRow':
                         break;
                     case 'select':
                     case 'radio':

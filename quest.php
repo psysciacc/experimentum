@@ -127,7 +127,10 @@ $q->print_form();
     });
     
     // form is submitted
-    function submitQ(quest_id) {    
+    function submitQ(quest_id) {
+        recordAnswers();
+        return true;
+        
         // check for empty questions
         var fields = {};
         $.each($('#maincontent form').serializeArray(), function(index,value) {

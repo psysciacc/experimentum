@@ -5,6 +5,16 @@
 /*-------------------------------------------------
 PAGE COLORS 
 -------------------------------------------------*/
+    $saturation = "100";
+    $bgcolor = 'hsl(' . THEME_HUE . ",0%,95%)"; // very light grey
+    $text = '#222';                     // (very dark grey)
+    $theme = 'hsl(' . THEME_HUE . ",50%,10%)"; // dark theme
+    $highlight = 'hsl(' . THEME_HUE . ",50%,30%)"; // bright theme
+    $text_on_theme = 'white';
+    $shade = 'hsl(' . THEME_HUE . ",100%,75%)"; // light theme
+    $border_color = 'white';
+    
+    $border = '3px solid ' . $border_color;
     $round_corners = 'padding: .25em; -khtml-border-radius: .5em; -webkit-border-radius: .5em; border-radius: .5em; ';
     $big_round_corners = 'padding: .25em; -khtml-border-radius: .5em; -webkit-border-radius: .5em; border-radius: .5em;';
     
@@ -19,76 +29,17 @@ PAGE COLORS
 ?>
 
 /*-------------------------------------------------
-DEFINITIONS
--------------------------------------------------*/
-
-:root {
-    --sat: 70%;
-    --theme-hue: <?= THEME_HUE ?>;
-    --theme:    hsl(var(--theme-hue),0%,10%);
-    --bgcolor:  hsl(var(--theme-hue),0%,95%);
-    --text:     #222;
-    --text-on-theme: white;
-    --border:   3px solid white;
-    --highlight: hsl(var(--theme-hue),var(--sat),30%);
-    --highlight2: hsl(var(--theme-hue),var(--sat),50%);
-    
-    --rainbow1: hsl(0,var(--sat),30%); 
-    --rainbow2: hsl(30,var(--sat),35%);
-    --rainbow3: hsl(50,var(--sat),35%);
-    --rainbow4: hsl(120,var(--sat),25%);
-    --rainbow5: hsl(200,var(--sat),30%);
-    --rainbow6: hsl(280,var(--sat),30%);
-}
-
-/*-------------------------------------------------
 FONTS
 -------------------------------------------------*/
 
-@font-face{
-    font-family: 'Fira Code';
-    src: url('fonts/FiraCode-Light.eot');
-    src: url('fonts/FiraCode-Light.eot') format('embedded-opentype'),
-         url('fonts/FiraCode-Light.woff2') format('woff2'),
-         url('fonts/FiraCode-Light.woff') format('woff'),
-         url('fonts/FiraCode-Light.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
+:root {
+    --rainbow-red: hsl(0,<?= $saturation ?>%,30%); 
+    --rainbow-orange: hsl(30,<?= $saturation ?>%,35%);
+    --rainbow-yellow: hsl(50,<?= $saturation ?>%,35%);
+    --rainbow-green: hsl(120,<?= $saturation ?>%,25%);
+    --rainbow-blue: hsl(200,<?= $saturation ?>%,30%);
+    --rainbow-purple: hsl(280,<?= $saturation ?>%,30%);
 }
-
-@font-face{
-    font-family: 'Fira Code';
-    src: url('fonts/FiraCode-Regular.eot');
-    src: url('fonts/FiraCode-Regular.eot') format('embedded-opentype'),
-         url('fonts/FiraCode-Regular.woff2') format('woff2'),
-         url('fonts/FiraCode-Regular.woff') format('woff'),
-         url('fonts/FiraCode-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face{
-    font-family: 'Fira Code';
-    src: url('fonts/FiraCode-Medium.eot');
-    src: url('fonts/FiraCode-Medium.eot') format('embedded-opentype'),
-         url('fonts/FiraCode-Medium.woff2') format('woff2'),
-         url('fonts/FiraCode-Medium.woff') format('woff'),
-         url('fonts/FiraCode-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face{
-    font-family: 'Fira Code';
-    src: url('fonts/FiraCode-Bold.eot');
-    src: url('fonts/FiraCode-Bold.eot') format('embedded-opentype'),
-         url('fonts/FiraCode-Bold.woff2') format('woff2'),
-         url('fonts/FiraCode-Bold.woff') format('woff'),
-         url('fonts/FiraCode-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-}
-
 
 /*-------------------------------------------------
 PAGE BODY and LAYOUT 
@@ -111,22 +62,26 @@ PAGE BODY and LAYOUT
 }
 
 body {
-    font-family:"Fira Code", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Lucida", "Trebuchet MS", verdana, helvetica, arial, sans-serif;
+    font-family:"Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Lucida", "Trebuchet MS", verdana, helvetica, arial, sans-serif;
     font-size:100%; 
-    color:var(--text);
-    background-color: var(--bgcolor);
+    color:<?= $text ?>;
+    background-color: <?= $bgcolor ?>;
     width:100%;
 }
 
 pre {
-    font-family:"Fira Code", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Lucida", "Trebuchet MS", verdana, helvetica, arial, sans-serif;
+    font-family:"Open Sans", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Lucida", "Trebuchet MS", verdana, helvetica, arial, sans-serif;
     font-size:120%; 
-    color:var(--text);
+    color:<?= $text ?>;
     white-space: pre-wrap;
 }
     
 textarea, input, select, td { 
     font: inherit;
+}
+
+select {
+    font-size: 90%;
 }
 
 /* Heights for Sticky Footer */
@@ -138,18 +93,11 @@ html, body {height: 100%;}
     float:left;
     width: 100%;
     padding: 10px 0 0px;
-    background-color: var(--theme);
-    color: var(--text-on-theme);
-    /* border-bottom: var(--border); */
+    background-color: <?= $theme ?>;
+    color: <?= $text_on_theme ?>;
+    border-bottom: <?= $border ?>;
     <?= shadow(); ?>
     margin-bottom: 1em;
-    box-shadow: 0 1.5px 0 0px var(--rainbow6),
-                0 3px 0 0px var(--rainbow5),
-                0 4.5px 0 0px var(--rainbow4),
-                0 6px 0 0px var(--rainbow3),
-                0 7.5px 0 0px var(--rainbow2),
-                0 9px 0 0px var(--rainbow1),
-                0 9.5px 1px 0px rgba(0,0,0,.5);
 }
 
 #breadcrumb { 
@@ -158,7 +106,7 @@ html, body {height: 100%;}
     font-size: 1.2em;
     padding: 0 0 0 20px; 
     margin: 0;
-    color: var(--text-on-theme);
+    color: <?= $text_on_theme ?>;
 }
 
 #breadcrumb li { 
@@ -228,7 +176,7 @@ ul#login_info li input { display: block; text-align: left; }
     float: right; 
     clear: right; 
     padding: .5em 20px 0 0;
-    color: var(--bgcolor);
+    color: <?= $bgcolor ?>;
 }
 
 #contentmask {
@@ -288,18 +236,11 @@ ul#login_info li input { display: block; text-align: left; }
     float:left;
     width:100%;
     padding:5px 0;
-    /*border-top: var(--border);*/
-    background-color: var(--theme);
-    color: var(--text-on-theme);
+    border-top: <?= $border ?>;
+    background-color: <?= $theme ?>;
+    color: <?= $text_on_theme ?>;
     text-align: center;
     <?= shadow(); ?>
-    box-shadow: 0 -1.5px 0 0px var(--rainbow6),
-                0 -3px 0 0px var(--rainbow5),
-                0 -4.5px 0 0px var(--rainbow4),
-                0 -6px 0 0px var(--rainbow3),
-                0 -7.5px 0 0px var(--rainbow2),
-                0 -9px 0 0px var(--rainbow1),
-                0 -9.5px 1px 0px rgba(0,0,0,.5);
 }
 
 #footer a, #footer a:visited, 
@@ -307,8 +248,8 @@ th a,
 th a:visited, 
 tr.radiorow_values a, 
 tr.radiorow_values a:visited { 
-    color: var(--text-on-theme); 
-    border-color: var(--text-on-theme);
+    color: <?= $text_on_theme ?>; 
+    border-color: <?= $text_on_theme ?>;
 }
 
 #footer a:hover, 
@@ -316,8 +257,8 @@ tr.radiorow_values a:visited {
 th a:hover,th a:active, 
 tr.radiorow_values a:hover, 
 tr.radiorow_values a:active { 
-    background-color: var(--text-on-theme); 
-    color: var(--theme); 
+    background-color: <?= $text_on_theme ?>; 
+    color: <?= $theme ?>; 
 }
 
 tr.radiorow_values a {
@@ -335,34 +276,30 @@ tr.radiorow_values a {
 
 /***** RIGHT COLUMN MENU *****/
 
-#menu > ul {
+#menu ul {
     width:250px;
 }
 
-#menu > ul { 
+#menu ul a:hover {}
+
+#menu > ul, #dash { 
     float: none; 
-    background-color: var(--theme);
-    border: var(--border);
+    background-color: <?= $theme ?>;
+    border: <?= $border ?>;
     <?= $round_corners ?>
     <?= shadow() ?>
-    color: var(--text-on-theme);
+    color: white;
     padding: .5em 1em;
     margin: 1em 0;
     width: 250px;
 }
 
 #dash { 
-    display: inline-block;
     float: left;
-    background-color: var(--theme);
-    border: var(--border);
-    <?= $round_corners ?>
-    <?= shadow() ?>
-    color: var(--text-on-theme);
-    padding: .5em 1em;
-    margin: 1em .5em .5em 0;
-    width: 250px;
+    margin: 0em 0.5em 0.5em 0;
 }
+
+#myfavs { min-height: 20em; }
 
 #time_container {
     height: 300px; 
@@ -387,41 +324,6 @@ tr.radiorow_values a {
 
 #dash li a:active { text-shadow: 0 0 .2em black; }
 
-.resbuttons {
-    display: inline-block; 
-    float: left; 
-    width: calc(100% - 250px - 2.5em); 
-}
-
-.resbuttons li a.exp     { background-image: url("/images/linearicons/0507-graph?c=FFF"); }
-.resbuttons li a.quest   { background-image: url("/images/linearicons/0204-clipboard-text?c=FFF"); }
-.resbuttons li a.set     { background-image: url("/images/linearicons/layers?c=FFF"); }
-.resbuttons li a.project { background-image: url("/images/linearicons/briefcase?c=FFF"); }
-.resbuttons li a.stimuli { background-image: url("/images/linearicons/picture?c=FFF"); }
-.resbuttons li a.tutorial{ background-image: url("/images/linearicons/0215-reading?c=FFF"); }
-.resbuttons li a.admin   { background-image: url("/images/linearicons/graduation-hat?c=FFF"); }
-
-.resbuttons li a.exp:hover { background-color: var(--rainbow1); }
-.resbuttons li a.quest:hover { background-color: var(--rainbow2); }
-.resbuttons li a.set:hover { background-color: var(--rainbow3); }
-.resbuttons li a.project:hover { background-color: var(--rainbow4); }
-.resbuttons li a.stimuli:hover { background-color: var(--rainbow5); }
-.resbuttons li a.tutorial:hover { background-color: var(--rainbow6); }
-.resbuttons li a.admin:hover { background-color: var(--rainbow1); }
-
-.resbuttons li { position: relative; }
-.resbuttons li input { 
-    width: 60%; 
-    display: block; 
-    position: absolute; 
-    top: 2.5em; left: 20%; 
-    color: white;
-    background-color: hsla(0, 0%, 100%, 20%);
-    border: 2px solid white;
-    text-align: center; 
-}
-.resbuttons li input:focus { box-shadow: none; }
-
 .new-owner { color: red; }
 .delete-owner {
     text-decoration: line-through; 
@@ -437,10 +339,11 @@ tr.radiorow_values a {
 }
 
 li.home       { background-image: url("/images/linearicons/home?c=FFFFFF"); }
-li.exp        { background-image: url("/images/linearicons/0507-graph?c=FFFFFF"); }
+li.exp        { background-image: url("/images/linearicons/chart-bars?c=FFFFFF"); }
 li.set        { background-image: url("/images/linearicons/layers?c=FFFFFF"); }
 li.project    { background-image: url("/images/linearicons/briefcase?c=FFFFFF"); }
-li.quest      { background-image: url("/images/linearicons/0204-clipboard-text?c=FFFFFF"); }
+li.lab        { background-image: url("/images/linearicons/0295-group-work?c=FFFFFF"); }
+li.quest      { background-image: url("/images/linearicons/list?c=FFFFFF"); }
 li.faq        { background-image: url("/images/linearicons/star?c=FFFFFF"); }
 li.res        { background-image: url("/images/linearicons/graduation-hat?c=FFFFFF"); }
 li.my         { background-image: url("/images/linearicons/user?c=FFFFFF"); }
@@ -453,24 +356,16 @@ li.my         { background-image: url("/images/linearicons/user?c=FFFFFF"); }
     color:#FFF;
 }
 #menu a:hover, #menu a:active, #menu a:focus {
-    color: white; /* var(--theme); */
+    color: white; /* <?= $theme ?>; */
     background-color: transparent;
     border-bottom: 2px solid white;
 }
-
-#menu ul li:nth-child(1) a:active, #menu ul li:nth-child(1) a:hover { border-color: var(--rainbow1); }
-#menu ul li:nth-child(2) a:active, #menu ul li:nth-child(2) a:hover { border-color: var(--rainbow2); }
-#menu ul li:nth-child(3) a:active, #menu ul li:nth-child(3) a:hover { border-color: var(--rainbow3); }
-#menu ul li:nth-child(4) a:active, #menu ul li:nth-child(4) a:hover { border-color: var(--rainbow4); }
-#menu ul li:nth-child(5) a:active, #menu ul li:nth-child(5) a:hover { border-color: var(--rainbow5); }
-#menu ul li:nth-child(6) a:active, #menu ul li:nth-child(6) a:hover { border-color: var(--rainbow6); }
-
 
 /***** HEADERS AND TEXT *****/
 
 h1, h2, h3, h4, h5, h6 { 
     font-size:110%; 
-    color:var(--theme);
+    color:<?= $theme ?>;
     text-align:center; 
     padding:.5em 0;
     clear: both;
@@ -496,7 +391,7 @@ h1 {
 
 h3, h4, h5, h6 { font-size:90%; }
 
-p, ul.p, ol.p {
+p {
     margin:1em auto;
     text-align:left;
     line-height:1.5;
@@ -510,9 +405,9 @@ p.fullwidth { width:auto; max-width:100%; }
 /* feature boxes for making information stand out */
 .feature {
     max-width:30em;
-    background:var(--theme);
-    color:var(--text-on-theme);
-    border: var(--border);
+    background:<?= $theme ?>;
+    color:<?= $text_on_theme ?>;
+    border: <?= $border ?>;
     text-align:center;
     margin:1em auto;
     <?= $big_round_corners ?>
@@ -533,23 +428,23 @@ p.fullwidth { width:auto; max-width:100%; }
 .main ul li { padding: .25em 0; }
 
 .feature h2 {
-    background-color:var(--theme);
-    color:var(--text-on-theme);
+    background-color:<?= $theme ?>;
+    color:<?= $text_on_theme ?>;
     padding:0;
 }
 
 .feature a:link, .feature a:visited {
-    color:var(--text-on-theme);
-    border-color: var(--text-on-theme);
+    color:<?= $text_on_theme ?>;
+    border-color: <?= $text_on_theme ?>;
 }
 
 .feature a:hover, .feature a:active {
-    color:var(--theme);
-    background-color:var(--text-on-theme);
+    color:<?= $theme ?>;
+    background-color:<?= $text_on_theme ?>;
 }
 
 strong { 
-    color:var(--theme); 
+    color:<?= $theme ?>; 
     font-style:normal; 
     font-weight:bold; 
 }
@@ -568,8 +463,8 @@ strong {
 
 hr { 
     clear:both; 
-    color:var(--text);
-    background-color:var(--text);
+    color:<?= $text ?>;
+    background-color:<?= $text ?>;
     width:100%;
     height:2px;
     margin:.5em 0;
@@ -581,43 +476,28 @@ hr.invisible { height:0; margin:0; }
     display:none;
 }
 
-#faq h2 { background-color: var(--theme); }
+#faq h2 { background-color: <?= $theme ?>; }
 #faq h2 a { border: none; color: white; }
 #faq h2 a:active { background-color: transparent; }
 div.ui-accordion-content { max-width: 40em; }
 
-#faq h2:nth-child(1):hover, #faq h2.ui-state-active:nth-child(1) { background-color: var(--rainbow1); }
-#faq h2:nth-child(3):hover, #faq h2.ui-state-active:nth-child(3) { background-color: var(--rainbow2); }
-#faq h2:nth-child(5):hover, #faq h2.ui-state-active:nth-child(5) { background-color: var(--rainbow3); }
-#faq h2:nth-child(7):hover, #faq h2.ui-state-active:nth-child(7) { background-color: var(--rainbow4); }
-#faq h2:nth-child(9):hover, #faq h2.ui-state-active:nth-child(9) { background-color: var(--rainbow5); }
-#faq h2:nth-child(11):hover, #faq h2.ui-state-active:nth-child(11) { background-color: var(--rainbow6); }
-#faq h2:nth-child(13):hover, #faq h2.ui-state-active:nth-child(13) { background-color: var(--rainbow1); }
-#faq h2:nth-child(15):hover, #faq h2.ui-state-active:nth-child(15) { background-color: var(--rainbow2); }
-#faq h2:nth-child(17):hover, #faq h2.ui-state-active:nth-child(17) { background-color: var(--rainbow3); }
-#faq h2:nth-child(19):hover, #faq h2.ui-state-active:nth-child(19) { background-color: var(--rainbow4); }
-#faq h2:nth-child(21):hover, #faq h2.ui-state-active:nth-child(21) { background-color: var(--rainbow5); }
-#faq h2:nth-child(23):hover, #faq h2.ui-state-active:nth-child(23) { background-color: var(--rainbow6); }
-
-
 /***** TEXT LINKS *****/
-a, a:link, a:visited, a:hover, a:active, #menu a:focus {
-    text-decoration:none; 
-    border-bottom: .1em solid var(--highlight);
-    border-top: .1em solid transparent;
-    border-right: .1em solid transparent;
-    border-left: .1em solid transparent;
+a { 
     outline: none;
 }
-a:link, a:visited { color: var(--text); }
-a:hover, a:focus, a:active { 
-    background-color: var(--highlight);
-    color: var(--text-on-theme);
-    outline:none;
+a:link, a:visited, a:hover, a:active, #menu a:focus {
+    text-decoration:none; 
+    border-bottom: .1em solid <?= $highlight ?>;
 }
-
+a:link { color:#000; }
+a:visited { color:#000; }
+a:hover, a:focus { 
+    color:<?= $highlight ?>; 
+}
 a:active { 
-    border-color: var(--text-on-theme);
+    background-color:<?= $highlight ?>; 
+    color:<?= $text_on_theme ?>; 
+    outline:none;
 }
 
 /***** SPECIAL LINKS *****/
@@ -625,14 +505,14 @@ a:active {
 #header a:link, #header a:visited {
     <?= $round_corners ?>
     padding: 0 .25em;
-    color: var(--text-on-theme);
+    color: <?= $text_on_theme ?>;
     text-decoration: underline;
     border-bottom: none;
 }
 
 #header a:hover, #header a:active, #header a:focus {
-    color:var(--highlight);
-    background-color:var(--text-on-theme);
+    color:<?= $highlight ?>;
+    background-color:<?= $text_on_theme ?>;
     text-decoration: none;
 }
 
@@ -664,6 +544,7 @@ dt {
     font-weight: bold;
     overflow: hidden;
     min-height: 1.25em;
+    
 }
 dd {
     margin: 0 1em .5em 10.5em;
@@ -693,29 +574,20 @@ ul.bigbuttons {
     word-wrap: break-word;
     position: relative; 
     overflow: hidden;
-    width: 10em;
-    height: 10em;
-    background: var(--theme) center 90% no-repeat;
+    width: 15vw;
+    height: 15vw; 
+    min-width: 8em;
+    min-height: 8em;
+    max-width: 10em;
+    max-height: 10em;
+    background: <?= $theme ?> center 90% no-repeat;
     background-size: auto 40%;
-    color: var(--text-on-theme);
+    color: <?= $text_on_theme ?>;
     text-align: center;
-    border: var(--border);
+    border: <?= $border ?>;
     <?= $big_round_corners ?>
     <?= shadow() ?>
 }
-
-.bigbuttons > li:nth-child(1) a:hover { background-color: var(--rainbow1); }
-.bigbuttons > li:nth-child(2) a:hover { background-color: var(--rainbow2); }
-.bigbuttons > li:nth-child(3) a:hover { background-color: var(--rainbow3); }
-.bigbuttons > li:nth-child(4) a:hover { background-color: var(--rainbow4); }
-.bigbuttons > li:nth-child(5) a:hover { background-color: var(--rainbow5); }
-.bigbuttons > li:nth-child(6) a:hover { background-color: var(--rainbow6); }
-.bigbuttons > li:nth-child(7) a:hover { background-color: var(--rainbow1); }
-.bigbuttons > li:nth-child(8) a:hover { background-color: var(--rainbow2); }
-.bigbuttons > li:nth-child(9) a:hover { background-color: var(--rainbow3); }
-.bigbuttons > li:nth-child(10) a:hover { background-color: var(--rainbow4); }
-.bigbuttons > li:nth-child(11) a:hover { background-color: var(--rainbow5); }
-.bigbuttons > li:nth-child(12) a:hover { background-color: var(--rainbow6); }
 
 .bigbuttons li.hide, .bigbuttons li.test, .bigbuttons li.archive {
     display: none;
@@ -750,7 +622,7 @@ ul.bigbuttons {
     position: absolute; 
     bottom: 1em; 
     right: -3em; 
-    color: var(--theme);
+    color: <?= $theme ?>;
     background-color: white; 
     display: block; 
     width: 10em;
@@ -762,10 +634,19 @@ ul.bigbuttons {
 .bigbuttons li.done a .corner { color: #AFC5CF; color: hsl(200, 10%, 50%); }
 .bigbuttons li.hide a .corner { color: #990000; color: hsl(0, 100%, 30%); }
 
+
+.bigbuttons li a.exp     { background-image: url("/images/linearicons/chart-bars?c=FFF"); }
+.bigbuttons li a.quest   { background-image: url("/images/linearicons/list?c=FFF"); }
+.bigbuttons li a.set     { background-image: url("/images/linearicons/layers?c=FFF"); }
+.bigbuttons li a.project { background-image: url("/images/linearicons/briefcase?c=FFF"); }
+.bigbuttons li a.lab     { background-image: url("/images/linearicons/0295-group-work?c=FFF"); }
+.bigbuttons li a.stimuli { background-image: url("/images/linearicons/picture?c=FFF"); }
+.bigbuttons li a.admin   { background-image: url("/images/linearicons/graduation-hat?c=FFF"); }
+
 .fav { 
     display: inline-block;
     width: 25px; height: 25px;
-    border: 1px solid var(--theme);
+    border: 1px solid <?= $theme ?>;
     <?= roundCorners('20px') ?>
     color: transparent;
     background: white no-repeat url() center center;
@@ -785,7 +666,7 @@ ul.bigbuttons {
 }
 
 .bigbuttons li a:hover {
-    background-color: var(--highlight);
+    background-color: <?= $highlight ?>;
 }
 .bigbuttons li a:active {
     <?= shadow('1px','1px','2px') ?>
@@ -869,23 +750,23 @@ table .ui-buttonset .ui-button span {
 }
 
 thead {
-    background-color: var(--theme);
-    color: var(--text-on-theme);
+    background-color: <?= $theme ?>;
+    color: <?= $text_on_theme ?>;
     text-align: center;
 }
 
 tfoot {
-    background-color: var(--theme);
-    color: var(--text-on-theme);
+    background-color: <?= $theme ?>;
+    color: <?= $text_on_theme ?>;
 }
 
 table.sortable thead th:hover { 
-    background-color: var(--highlight);
-    color: var(--text-on-theme); 
+    background-color: <?= $highlight ?>;
+    color: <?= $text_on_theme ?>; 
 }   
 
 th {
-    border-bottom: var(--border);
+    border-bottom: <?= $border ?>;
 }
 
 td, th { 
@@ -969,15 +850,15 @@ tr.chosen1 img {
 }
 
 #finder li.image {  
-    background-image: url("/images/finder/imgicon?h=var(--theme-hue)");
+    background-image: url("/images/finder/imgicon?h=<?= THEME_HUE ?>");
 }
 
 #finder li.audio {  
-    background-image: url("/images/finder/audioicon?h=var(--theme-hue)");
+    background-image: url("/images/finder/audioicon?h=<?= THEME_HUE ?>");
 }
 
 #finder li.video {  
-    background-image: url("/images/finder/videoicon?h=var(--theme-hue)");
+    background-image: url("/images/finder/videoicon?h=<?= THEME_HUE ?>");
 }
 
 #finder li.file.ui-selected {
@@ -1000,11 +881,11 @@ tr.chosen1 img {
 /***** Tables *****/
 
 tbody tr.odd, li.odd {
-    background-color: hsl(var(--theme-hue),0%,80%);
+    background-color: hsl(<?= THEME_HUE ?>,0%,80%);
 }
 
 tbody tr.even, li.even {
-    background-color: hsl(var(--theme-hue),0%,90%);
+    background-color: hsl(<?= THEME_HUE ?>,0%,90%);
 }
 
 table.nostripe tbody tr.odd {
@@ -1036,9 +917,9 @@ tbody tr.even.emptyAlert {
 
 tr.done, tr.done a:link, tr.done a:visited { 
     color: #475F6B;
-    color: hsl(var(--theme-hue), 0%, 35%); 
+    color: hsl(<?= THEME_HUE ?>, 0%, 35%); 
 }
-tr.done a:hover { color: var(--theme); }
+tr.done a:hover { color: <?= $theme ?>; }
 tr.done a:active { color: white; }
 
 /***** FORMS *****/
@@ -1049,10 +930,10 @@ form {
 }
 
 table.questionnaire, table.query, table.fb_chart {
-    border: var(--border);
+    border: <?= $border ?>;
     <?= shadow() ?>
     margin: 1em auto 5px auto;
-    width: 100%;
+    max-width: 795px;
     clear: both;
 }
 
@@ -1060,26 +941,21 @@ table.questionnaire td.input select {
     max-width: 400px;
 }
 
-table.questionnaire textarea {
-    width: 100%;
-    min-height: 7em;
-}
-
 .radiorow_options {
-    background-color: var(--theme) !important;
-    color: var(--text-on-theme);
+    background-color: <?= $theme ?> !important;
+    color: <?= $text_on_theme ?>;
     font-size: smaller;
 }
 
 .radiorow_options th {
     padding: 5px;
-    color: var(--text-on-theme);
+    color: <?= $text_on_theme ?>;
 }
 
 tr + tr.radiorow_options th {
-    border-top: var(--border);
-    background-color: var(--theme);
-    color: var(--text-on-theme);
+    border-top: <?= $border ?>;
+    background-color: <?= $theme ?>;
+    color: <?= $text_on_theme ?>;
 }
 
 .radiopage td + td {
@@ -1125,7 +1001,7 @@ table.questionnaire td.question {
 }
 
 input, select, textarea {
-    border:1px dotted var(--theme);
+    border:1px dotted <?= $theme ?>;
 }
 
 table.ranking {
@@ -1161,6 +1037,7 @@ img.radio {
     background: top left no-repeat url("/images/linearicons/circle?c=<?= THEME ?>");
 }
 
+.shade { background-color:<?= $shade ?> !important; }
 .highlight { background: url(/images/linearicons/star?c=<?= THEME ?>) no-repeat 6px 3px; }
 .highlight td.question { padding-left: 27px; }
 
@@ -1226,11 +1103,11 @@ label {
 }
 .radiopage input[type=radio]:checked + label,
 .radioanchor input[type=radio]:checked + label { 
-    background-color: hsl(var(--theme-hue), 20%, 30%); }
+    background-color: hsl(<?= THEME_HUE ?>, 20%, 30%); }
 
 .radiopage input[type=radio] + label:hover,
 .radioanchor input[type=radio] + label:hover { 
-    background-color: hsl(var(--theme-hue), 20%, 40%); 
+    background-color: hsl(<?= THEME_HUE ?>, 20%, 40%); 
 }
 .radiopage input[type=radio] + label:active,
 .radioanchor input[type=radio] + label:active   { box-shadow: 0 0 1px rgba(0,0,0,.5); }
@@ -1291,7 +1168,7 @@ div.slider .ui-slider-handle {
     text-align: center;
     line-height: 1.4em;
     border-radius: 0.7em;
-    background-color: var(--highlight);
+    background-color: <?= $highlight ?>;
 }
 
 .buttonrow #low_anchor { text-align: right; }
@@ -1329,13 +1206,13 @@ td.anchor {
     font-size: 70%;
     line-height: 40px;
     border: 1px solid white;
-    background-color: var(--highlight);
+    background-color: <?= $highlight ?>;
     <?= roundCorners('25px') ?>
     <?= shadow('2px','2px','4px') ?>
 }
 
 .helpbutton:hover, .helpbutton:active {
-    background-color: var(--rainbow1);
+    background-color: <?= $highlight ?>;
 }
 
 .helpbutton:active {
@@ -1479,7 +1356,7 @@ div.audio span.play {
     <?= roundCorners('3em') ?>
     border: 5px solid white; 
     color: white; 
-    background-color: var(--theme); 
+    background-color: <?= $theme ?>; 
     box-shadow: 4px 4px 6px rgba(0,0,0,.5); 
     display: block; 
 }
@@ -1489,10 +1366,10 @@ div.video span.choose:active {
     box-shadow: 2px 2px 4px rgba(0,0,0,.5); 
 }
 div.audio.played span.play { 
-    background-color: hsl(var(--theme-hue), 10%, 50%); 
+    background-color: hsl(<?= THEME_HUE ?>, 10%, 50%); 
 }
 div.audio.playing span.play { 
-    background-color: hsl(var(--theme-hue), 100%, 30%); 
+    background-color: hsl(<?= THEME_HUE ?>, 100%, 30%); 
 }
 div.audio span.choose,
 div.video span.choose { 
@@ -1500,17 +1377,17 @@ div.video span.choose {
     font-size: 20px;
     width: 200px;
     margin: 0 auto;
-    color: hsl(var(--theme-hue),100%,30%);
+    color: hsl(<?= THEME_HUE ?>,100%,30%);
     background-color: white;
     padding: .5em .5em;
-    border: 3px solid hsl(var(--theme-hue), 100%, 30%);
+    border: 3px solid hsl(<?= THEME_HUE ?>, 100%, 30%);
     border-bottom-left-radius: 1em; 
     border-bottom-right-radius: 1em; 
     box-shadow: 4px 4px 6px rgba(0,0,0,.5); 
 }
 
 table.jnd {
-    border: 2px solid var(--theme);
+    border: 2px solid <?= $theme ?>;
     <?= roundCorners('0') ?>
 }
 
@@ -1523,7 +1400,7 @@ table.jnd {
 
 .jnd .input_interface td { 
     font-size: 90%; 
-    border: 2px solid var(--theme); 
+    border: 2px solid <?= $theme ?>; 
     width: 12.5% !important;
     min-height: 4em;
     vertical-align: middle;
@@ -1546,7 +1423,7 @@ table.jnd {
 }
 
 .jnd tr.exp_images td {
-    border: 2px solid var(--theme); 
+    border: 2px solid <?= $theme ?>; 
 }
 
 img#left_image { margin: 0 0 0 auto; }
@@ -1554,13 +1431,20 @@ img#right_image { margin: 0 auto 0 0; }
 img#center_image, .jnd img#left_image, .jnd img#right_image { margin: 0 auto; }
 
 .jnd .input_interface td:active { 
-    color: var(--text-on-theme);
-    background-color: var(--theme); 
+    color: <?= $text_on_theme ?>;
+    background-color: <?= $theme ?>; 
 }
 
 
 .buttons .input_interface input {
     font-size: 150%;
+}
+
+.buttons .input_interface input.ui-state-default,
+.buttons .input_interface input.ui-state-active,
+.buttons .input_interface input:hover {
+    background-color: hsl(0, 0%, 85%);
+    color: inherit;
 }
 
 input.rating {
@@ -1570,6 +1454,7 @@ input.rating {
 }
 
 .exp_images td {
+    /* border: 2px solid <?= $border_color ?>; */
     background-color: transparent;
     text-align: center;
 }
@@ -1594,8 +1479,8 @@ table.xafc tr.exp_images td img, table.sort tr.exp_images td img {
 
 table.sort tr.exp_images td img.sort_placeholder { 
     min-height: 150px;
-    border: 2px solid var(--theme);
-    background-color: var(--theme);
+    border: 2px solid <?= $theme ?>;
+    background-color: <?= $theme ?>;
 }
 
 table.tafc tr.exp_images td img, table.xafc tr.exp_images td img {
@@ -1603,7 +1488,7 @@ table.tafc tr.exp_images td img, table.xafc tr.exp_images td img {
 }
 
 table.tafc tr.exp_images td img:active, table.xafc tr.exp_images td img:active {
-    border: 2px solid var(--theme);
+    border: 2px solid <?= $theme ?>;
 }
 
 table.tafc tr.exp_images td#center_image img:active {
@@ -1651,20 +1536,59 @@ table.motivation .ui-slider-handle { display: none; }
 }
 
 .ui-tabs-active a {
-    background-color: var(--highlight);
+    background-color: <?= $highlight ?>;
     border-bottom: none;
 }
 
 /*-------------------------------------------------
-PAD STYLES
+MOBILE STYLES
 -------------------------------------------------*/
-
-@media screen and (max-width: 768px) {
-    #content { right: 0; }
+@media screen and (max-width: 600px) {
+    body {
+        font-family: "Open Sans", Helvetica;
+        -webkit-text-size-adjust:none;
+        font-size:16px; 
+        background-image: none;
+    }
+    
+    body.logo {
+        background-image: none;
+    }
+    
+    img { max-width: 100%; height: auto; }
     
     .nomenu #maincontent, #maincontent { 
-        padding: 0 1em;
+        padding: 5px;
         min-height: 10px;
+    }
+    
+    #content { right:0; }
+    
+    #contentmask { padding-bottom: 0; }
+    
+    #breadcrumb { padding-left: 5px; }
+    
+    #breadcrumb li { 
+        display: block; 
+    }
+    
+    .helpbutton {
+        left: 0;
+        top: 4em;
+        margin-right: 5px;
+        float: right;
+    }
+    
+    ul#login_info {
+        font-size: 100%;
+        position: absolute;
+        top: 10px;
+        right: 0;
+        padding-right: 0px;
+    }
+    
+    #header {
+        /*margin-bottom: 0;*/
     }
     
     #menu {
@@ -1722,98 +1646,6 @@ PAD STYLES
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
     }
-
-    #dash {
-        width: 100%;
-        min-width: 100%;
-        max-width: 100%;
-        min-height: auto;
-        background-color: transparent;
-        border: none;
-        box-shadow: none;
-        padding: 0;
-        color: var(--theme);
-    }
-    
-    #dash ul {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-    
-    #dash li {
-        width: 100%;
-        height: auto;
-        border: 2px solid var(--text-on-theme);
-        background-color: hsl(0,100%,20%);
-        background-position: 10px center;
-        background-size: 1.5em auto;
-        <?= roundCorners('0.5em') ?>
-        <?= shadow() ?>
-        padding: 0.5em 0.5em 0.5em 2em;
-    }
-    
-    #dash li a, #dash li a:active {
-        padding: 0.5em;
-        background-color: transparent;
-    }
-    
-    .resbuttons {
-        width: 100%;
-    }
-}
-
-/*-------------------------------------------------
-MOBILE STYLES
--------------------------------------------------*/
-@media screen and (max-width: 600px) {
-    body {
-        font-family: "Fira Code", Helvetica;
-        -webkit-text-size-adjust:none;
-        font-size:16px; 
-        background-image: none;
-    }
-    
-    body.logo {
-        background-image: none;
-    }
-    
-    img { max-width: 100%; height: auto; }
-    
-    .nomenu #maincontent, #maincontent { 
-        padding: 5px;
-        min-height: 10px;
-    }
-    
-    #content { right: 0; }
-    
-    #contentmask { padding-bottom: 0; }
-    
-    #breadcrumb { padding-left: 5px; }
-    
-    #breadcrumb li { 
-        display: block; 
-    }
-    
-    .helpbutton {
-        left: 0;
-        top: 4em;
-        margin-right: 5px;
-        float: right;
-    }
-    
-    ul#login_info {
-        font-size: 100%;
-        position: absolute;
-        top: 10px;
-        right: 0;
-        padding-right: 0px;
-    }
-    
-    #header {
-        /*margin-bottom: 0;*/
-    }
-    
     
     #footer {
         margin-top: 0;
@@ -1846,7 +1678,7 @@ MOBILE STYLES
         max-width: 100%;
         max-height: auto;
         padding-left: 2em;
-        background: var(--theme) 10px no-repeat;
+        background: <?= $theme ?> 10px no-repeat;
         background-size: 1.5em auto;
     }
     
@@ -1919,16 +1751,48 @@ MOBILE STYLES
     .ui-button { font-size: 120%; }
     .ui-dialog { max-width: 100%; width: 95%; }
 
+    #dash {
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        color: <?= $theme ?>;
+    }
     
-    
-    .resbuttons { width: auto; }
+    #myfavs { min-height: auto; }
     
     #time_container {
         height: 200px; 
         width: 100%; 
         margin-left: -1em;
     }
-
+    
+    #dash ul {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    
+    #dash li {
+        width: 100%;
+        height: auto;
+        border: 2px solid <?= $border_color ?>;
+        background-color: hsl(0,100%,20%);
+        background-position: 10px center;
+        background-size: 1.5em auto;
+        <?= roundCorners('0.5em') ?>
+        <?= shadow() ?>
+        padding: 0.5em 0.5em 0.5em 2em;
+    }
+    
+    #dash li a, #dash li a:active {
+        padding: 0.5em;
+        background-color: transparent;
+    }
+    
     #low_anchor, #high_anchor {
         max-width: 75%;
         display: block;

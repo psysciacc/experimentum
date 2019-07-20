@@ -382,10 +382,6 @@ $page->set_menu(false);
 $page->displayHead($styles);
 $page->displayBody();
 
-if ($qInfo['status'] == 'active') { 
-    echo "<h3 class='warning'>Saving an active questionnaire will make it inactive</h3>"; 
-}
-
 echo $infoTable->print_form();
 
 // !    editable questionnaire
@@ -456,8 +452,8 @@ $type_options = array(
     'radioanchor' => 'Radio Buttons With Anchors',
     'datemenu' => 'Date Menu',
     'countries' => 'Countries',
-    'text' => 'Short Text (<=255 characters)',
-    'textarea' => 'Long Text (>255 characters)'
+    'text' => 'Text',
+    //'textarea' => 'Text (>255 characters)'
 );
 
 // !    questions
@@ -1113,11 +1109,7 @@ foreach ($questions as $n => $q) {
                             .attr('placeholder', 'maxlength:255');
             theInput.replaceWith(newInput);
         } else if (theType == 'textarea') { 
-            // !        Change to textarea
-            newInput = $('<textarea />')
-                            .attr('name', theInput.attr('id'))
-                            .attr('id', theInput.attr('id'));
-            theInput.replaceWith(newInput);
+            alert('change to textarea');
         }
         
         if (theType != 'radiorow' && theType != 'radiorev') {
@@ -1296,34 +1288,15 @@ foreach ($questions as $n => $q) {
     // !    saveQuestionnaire()
     function saveQuestionnaire() {
         // check that all the inputs are in participant view
-        $('#quest_table > tbody > tr td.input').each( function() {
-            if ($(this).hasClass('beingedited')) {
-                // remove editing styles
-                editQuestion(this);
-            }
-        });
+        // [TODO] make this automatic or unnecessary 
+        if ($('#quest_table tr td.input.beingedited').length) {
+            $('<div />').html('You need to set the questionnaire to participant view before you save it. (Click the edit pencil next to all the yellow items.)').dialog();
+            return false;
+        }
         
         $('input.instantedit').each( function() {
             $(this).val(unescape($(this).val()));
         });
-        
-        // check all dv names are unique
-        var dv_names = [];
-        $('input.instantedit[id^="i_name_"]').each(function(i){
-            dv_names[i] = this.value;
-        });
-        dv_names = dv_names.sort();
-        var duplicate_names = [];
-        $.each(dv_names, function(i) {
-            if (i >0 && dv_names[i] == dv_names[i-1]) {
-                duplicate_names[duplicate_names.length] = dv_names[i];
-                $('span.editText[id^="name_"]:contains('+dv_names[i]+')').addClass('warning');
-            }
-        });
-        if (duplicate_names.length) {
-            $('<div />').html('Please make all row names unique.').dialog();
-            return false;
-        }
         
         var qInfo = [];
         // get specific question info for each question
@@ -1366,8 +1339,6 @@ foreach ($questions as $n => $q) {
                 theQ['high_anchor'] = $('#q' + theID).datepicker('option', 'maxDate');
             } else if (theType == 'text') {
                 theQ['maxlength'] = $('#q' + theID).attr('maxlength');
-            } else if (theType == 'textarea') {
-                // no attributes yet
             } else if (theType == 'selectnum') {
                 theQ['low_anchor'] = $('select#q' + theID).find('option:eq(1)').val();
                 theQ['high_anchor'] = $('select#q' + theID).find('option:last').val();
@@ -1423,19 +1394,13 @@ foreach ($questions as $n => $q) {
     
     // !    addQuestion()
     function addQuestion() {
-        var $lastTr = $('#quest_table > tbody > tr:last');
-        if ($lastTr.find('td.input').hasClass('beingedited')) {
-            // remove editing styles
-            editQuestion($lastTr.find('td.input')[0]);
-        }
-        
-        var oldID = parseInt($lastTr.attr('id').replace('row_', ''));
+        var oldID = parseInt($('#quest_table > tbody > tr:last').attr('id').replace('row_', ''));
         //var newID = oldID + 1;
         newID = Math.floor(Math.random()*100000000);
         
         var oldRegex = new RegExp('_' + oldID, 'g');
-        $('#quest_table > tbody').append($lastTr.clone(true));
-        $lastTr = $('#quest_table > tbody > tr:last');
+        $('#quest_table > tbody').append($('#quest_table > tbody > tr:last').clone(true));
+        var $lastTr = $('#quest_table > tbody > tr:last');
         $lastTr.attr('id', 'row_' + newID).addClass('newQ');
         
         // remove instantedit and unbind its functions

@@ -9,15 +9,28 @@ unset($_SESSION['set_item_number']);
 
 $title = loc('Researchers');
 
-$styles = array();
+$styles = array(
+    '.bigbuttons li' => 'position: relative;',
+    '.bigbuttons li input' => 'width: 60%; 
+                               display: block; 
+                               position: absolute; 
+                               top: 2.5em; left: 20%; 
+                               color: white;
+                               background-color: hsla(0, 0%, 100%, 20%);
+                               border: 2px solid white;
+                               text-align: center;',
+    '.bigbuttons li input:focus' => 'box-shadow: none;',
+    '.bigbuttons li a.study1' => 'background-image: url("/images/linearicons/smile?c=FFFFFF");'
+);
 
 $links = array(
     '/res/exp/'      => 'Experiments',
     '/res/quest/'    => 'Questionnaires',
     '/res/set/'      => 'Sets',
     '/res/project/'  => 'Projects',
+    '/res/lab/'      => 'Labs',
     '/res/stimuli/'  => 'Stimuli',
-    '/res/tutorial/'  => 'Tutorial',
+    '/res/psa1'      => 'Study 1'
 );
 
 if (in_array($_SESSION['status'], array('res', 'admin'))) {
@@ -31,7 +44,8 @@ $class = array(
     '/res/set/'      => 'set',
     '/res/project/'  => 'project',
     '/res/admin/'    => 'admin',
-    '/res/tutorial/' => 'tutorial'
+    '/res/lab/'      => 'lab',
+    '/res/psa1'      => 'study1'
 );
 
 $q = new myQuery();
@@ -57,19 +71,14 @@ $q->prepare(
 );
 $dashboard = $q->get_assoc();
 $dash = 'My Pinned Items<ul id="myfavs">' . ENDLINE;
-$url = array(
-    'query' => '/res/data/',
-    'exp' => '/res/exp/info',
-    'quest' => '/res/quest/info',
-    'set' => '/res/set/info',
-    'project' => '/res/project/info'
-);
+
 foreach ($dashboard as $attr) {
-    $dash .= sprintf('    <li class="%s"><a href="/res/%s/info?id=%s">%s</a></li>' . ENDLINE,
+    $dash .= sprintf('    <li class="%s"><a href="/res/%s/info?id=%s">%s<br>%s</a></li>' . ENDLINE,
         $attr['type'],
         $attr['type'],
         $attr['id'],
-        $attr['res_name']
+        $attr['res_name'],
+        $attr['name']
     );
 }
 $dash .= '</ul>';
@@ -87,28 +96,40 @@ $page->displayBody();
 ?>
 
 <div id="dash"><?= $dash ?></div>
-<?= linkList($links, 'bigbuttons resbuttons', 'ul', $class) ?>
+<?= linkList($links, 'bigbuttons', 'ul', $class) ?>
+
+<p class="fullwidth" style="clear:both;">You can make new experiments or questionnaires at the 
+    <a href="/res/exp/">Experiment</a>  or <a href="/res/quest/">Questionnaire</a> lists above. 
+    Chain them together by making new sets at the <a href="/res/set/builder">Set Builder</a>.
+    Make a project page with the <a href="/res/project/builder">Project Builder</a> 
+    so you can direct participants to your project with a custom URL. 
+    Browse our <a href="/res/stimuli/browse">open-access stimuli</a> or 
+    <a href="/res/stimuli/upload">upload your own stimuli</a>.
+</p>
+
 
 <script>
-    //$("#dash").prependTo('ul.resbuttons');
-    
-    $('.resbuttons a.exp').closest('li').append('<input data-type="exp" />');
-    $('.resbuttons a.quest').closest('li').append('<input data-type="quest" />');
-    $('.resbuttons a.set').closest('li').append('<input data-type="set" />');
-    $('.resbuttons a.project').closest('li').append('<input data-type="project" />');
-    
-    $('.resbuttons input').keydown( function(e) {
-        if (e.which == 13) {
-            var n = this.value;
-            var isValid = Math.floor(n) == n && $.isNumeric(n) && n>0;
-            if (isValid) {
-                var theType = $(this).data('type');
-                
-                location.href = '/res/' + theType + '/info?id=' + n;
-            } else {
-                this.value = '';
+    $(function() {
+        $("#dash").prependTo('ul.bigbuttons');
+        
+        $('.bigbuttons a.exp').closest('li').append('<input data-type="exp" />');
+        $('.bigbuttons a.quest').closest('li').append('<input data-type="quest" />');
+        $('.bigbuttons a.set').closest('li').append('<input data-type="set" />');
+        $('.bigbuttons a.project').closest('li').append('<input data-type="project" />');
+        
+        $('.bigbuttons input').keydown( function(e) {
+            if (e.which == 13) {
+                var n = this.value;
+                var isValid = Math.floor(n) == n && $.isNumeric(n) && n>0;
+                if (isValid) {
+                    var theType = $(this).data('type');
+                    
+                    location.href = '/res/' + theType + '/info?id=' + n;
+                } else {
+                    this.value = '';
+                }
             }
-        }
+        });
     });
 </script>
 

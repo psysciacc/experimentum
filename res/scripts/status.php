@@ -21,18 +21,13 @@ if (!in_array($type, array('exp','quest','project','sets'))) {
 
 // if a researcher, check if they have access to this one
 if ($_SESSION['status'] == 'res') {
-    $query = new myQuery();
-    $query->prepare("SELECT user_id FROM access
-                     WHERE type = ? AND id = ?
-                       AND (user_id = ? OR user_id IN (SELECT user_id FROM res WHERE supervisor_id = ?))",
-                    array('siii',
-                          $type,
-                          $id,
-                          $_SESSION['user_id'],
-                          $_SESSION['user_id']
-                          )
-                    );
+    if ($status == 'active') {
+        $return['error'] =  "You do not have permission to change the status of {$type}_{$id} to active, please ask an admin.";
+        scriptReturn($return);
+        exit;
+    }
     
+    $query = new myQuery("SELECT user_id FROM access WHERE `type`='{$type}' AND id={$id} AND user_id={$_SESSION['user_id']}");
     if ($query->get_num_rows() == 0) {
         $return['error'] =  "You do not have permission to change the status of {$type}_{$id}.";
         scriptReturn($return);

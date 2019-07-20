@@ -54,8 +54,8 @@ $itemdata['lower_age'] = is_null($itemdata['lower_age']) ? 'any' : $itemdata['lo
 
 $return['info'] = $itemdata;
 
-// get status changer for admins and res
-if (in_array($_SESSION['status'], array('admin', 'res'))) {
+// get status changer for admins
+if ($_SESSION['status'] == 'admin') {
     $status_chooser = new select('status', 'status', $itemdata['status']);
     $status_chooser->set_options(array(
         'test' => 'test',
@@ -66,8 +66,7 @@ if (in_array($_SESSION['status'], array('admin', 'res'))) {
     $status = $status_chooser->get_element();
     $status .= '<button class="tinybutton" id="all-status-change">Set all component statuses to project status</button>';
 } else {
-    $status = $itemdata['status'];
-    $status .= ' <button class="tinybutton" id="request-status-change">Request status change</button>';
+    $status = '(' . $itemdata['status'] . ')';
 }
 
 $return['status'] = $status;
@@ -89,12 +88,12 @@ $return['owners']['owners'] = $owners;
 
 $owner_edit = "";
 foreach($owners as $id => $name) {
-    $owner_edit .= "<tr><td>{$name}</td>";
+    $owner_edit .= "<li><span>{$name}</span>";
     if ($_SESSION['status'] != 'student') { 
-        $owner_edit .= "<td><button class='tinybutton owner-delete' owner-id='{$id}'>remove</button></td>";
-        $owner_edit .= "<td><button class='tinybutton owner-delete-items' owner-id='{$id}'>remove from all items</button></td>";
+        $owner_edit .= " <button class='tinybutton owner-delete' owner-id='{$id}'>remove</button>";
+        $owner_edit .= " <button class='tinybutton owner-delete-items' owner-id='{$id}'>remove from all items</button>";
     }
-    $owner_edit .= "</tr>";
+    $owner_edit .= "</li>";
 }
 $return['owners']['owner_edit'] = $owner_edit; 
 

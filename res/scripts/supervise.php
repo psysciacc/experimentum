@@ -6,7 +6,6 @@ auth(array('admin'));
 $return = array('error' => false);
 
 $query = new myQuery();
-/*
 if ($_POST['supervisor_id'] == "") {
     $query->prepare(
         "DELETE FROM supervise WHERE supervisee_id = ?",
@@ -18,12 +17,6 @@ if ($_POST['supervisor_id'] == "") {
         array('ii', $_POST['supervisor_id'], $_POST['supervisee_id'])
     );
 }
-*/
-
-$query->prepare(
-    "UPDATE res SET supervisor_id = ? WHERE user_id = ?",
-    array('ii', $_POST['supervisor_id'], $_POST['supervisee_id'])
-);
 
 if ($query->get_affected_rows() == 0 ) {
     $return['error'] = "Supervisor not changed";
