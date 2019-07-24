@@ -41,7 +41,7 @@ $itemdata = $myset->get_one_array();
 // convert markdown sections
 $Parsedown = new Parsedown();
 $itemdata['intro'] = $Parsedown->text($itemdata['intro']);
-$itemdata['url'] = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'] . "/project?" . $itemdata['url'];
+$itemdata['url'] = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . "/project?" . $itemdata['url'];
 
 $itemdata['sex'] = array(
     'both' => 'All genders',
@@ -54,8 +54,8 @@ $itemdata['lower_age'] = is_null($itemdata['lower_age']) ? 'any' : $itemdata['lo
 
 $return['info'] = $itemdata;
 
-// get status changer for admins
-if ($_SESSION['status'] == 'admin') {
+// get status changer for admins and res
+if (in_array($_SESSION['status'], array('admin', 'res'))) {
     $status_chooser = new select('status', 'status', $itemdata['status']);
     $status_chooser->set_options(array(
         'test' => 'test',
@@ -66,7 +66,8 @@ if ($_SESSION['status'] == 'admin') {
     $status = $status_chooser->get_element();
     $status .= '<button class="tinybutton" id="all-status-change">Set all component statuses to project status</button>';
 } else {
-    $status = '(' . $itemdata['status'] . ')';
+    $status = $itemdata['status'];
+    $status .= ' <button class="tinybutton" id="request-status-change">Request status change</button>';
 }
 
 $return['status'] = $status;
@@ -88,12 +89,12 @@ $return['owners']['owners'] = $owners;
 
 $owner_edit = "";
 foreach($owners as $id => $name) {
-    $owner_edit .= "<li><span>{$name}</span>";
+    $owner_edit .= "<tr><td>{$name}</td>";
     if ($_SESSION['status'] != 'student') { 
-        $owner_edit .= " <button class='tinybutton owner-delete' owner-id='{$id}'>remove</button>";
-        $owner_edit .= " <button class='tinybutton owner-delete-items' owner-id='{$id}'>remove from all items</button>";
+        $owner_edit .= "<td><button class='tinybutton owner-delete' owner-id='{$id}'>remove</button></td>";
+        $owner_edit .= "<td><button class='tinybutton owner-delete-items' owner-id='{$id}'>remove from all items</button></td>";
     }
-    $owner_edit .= "</li>";
+    $owner_edit .= "</tr>";
 }
 $return['owners']['owner_edit'] = $owner_edit; 
 
